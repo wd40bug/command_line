@@ -27,8 +27,15 @@ impl Config {
         }
         let query = args[1].clone();
         let filename = args[2].clone();
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
-        println!("{}",!case_sensitive);
+        let case_sensitive = if args.len()<4{
+            env::var("CASE_INSENSITIVE").is_err()
+        } else{
+            match &args[3].to_lowercase()[..]{
+                "f"=>false,
+                "false"=>false,
+                _=>true
+            }
+        };
         Ok(Config { query, filename, case_sensitive })
     }
 }
