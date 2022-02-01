@@ -1,15 +1,18 @@
-use std::{env, fs};
-
+use std::{env, process};
+use command_line::Config;
 fn main(){
     let args:Vec<String> = env::args().collect();
-    let query = &args[1];
-    let filename = &args[2];
 
-    println!("Looking for {}",query);
-    println!("In file {}",filename);
+    let arguments = Config::new(&args).unwrap_or_else(|err| {
+        println!("problem parsing file: {}",err);
+        process::exit(1);
+    });
 
-    let contents = fs::read_to_string(filename).expect("couldn't read file");
-
-    println!("With text:\n{}",contents);
+    if let Err(e) = command_line::run(arguments){
+        println!("Application error: {}",e);
+        process::exit(1);
+    }
     
 }
+
+
